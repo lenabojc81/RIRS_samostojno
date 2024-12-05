@@ -1,4 +1,4 @@
-# Ime pipeline-a za backend
+# Ime pipeline-a za frontend
 name: Frontend CI
 
 # Dogodki, ki sprožijo workflow (push in pull request na glavno vejo)
@@ -51,7 +51,7 @@ jobs:
         # Nameščene odvisnosti
 
   # Job za testiranje frontend
-  test-backend:
+  test-frontend:
     needs: build-frontend  # Testiranje se izvede po uspešni gradnji
     runs-on: ubuntu-latest
 
