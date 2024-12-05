@@ -82,7 +82,7 @@ jobs:
 
     - name: Run tests with coverage  # Izvajanje testov s pokritostjo
       run: |
-        backend
+        cd backend
         npm run test:ci
 
     - name: Upload coverage report  # Naložitev poročila o pokritosti kode
