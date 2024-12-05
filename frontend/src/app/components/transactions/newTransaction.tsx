@@ -52,8 +52,9 @@ export default function NewTransaction() {
             <h4 className="mb-4">New Transaction</h4>
             
             <div className="mb-3">
-                <label className="form-label">Name of Transaction</label>
+                <label className="form-label" htmlFor="transaction-name">Name of Transaction</label>
                 <input
+                    id="transaction-name"
                     type="text"
                     className="form-control"
                     placeholder="Enter the name of transaction"
@@ -63,8 +64,9 @@ export default function NewTransaction() {
             </div>
 
             <div className="mb-3">
-                <label className="form-label">Amount</label>
+                <label className="form-label" htmlFor="transaction-amount">Amount</label>
                 <input
+                    id="transaction-amount"
                     type="number"
                     className="form-control"
                     placeholder="Enter the amount"
