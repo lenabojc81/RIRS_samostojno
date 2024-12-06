@@ -81,6 +81,8 @@ jobs:
       # - Če je cache miss, npm install ponovno ustvari mapo node_modules.
 
     - name: Run tests with coverage  # Izvajanje testov s pokritostjo
+      env:
+        MONGO_URI: ${{ secrets.MONGO_URI  }}
       run: |
         cd backend
         npm run test:ci
