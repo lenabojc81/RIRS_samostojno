@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1733489569348" clover="3.2.0">
-  <project timestamp="1733489569348" name="All files">
-    <metrics statements="52" coveredstatements="46" conditionals="4" coveredconditionals="3" methods="7" coveredmethods="7" elements="63" coveredelements="56" complexity="0" loc="52" ncloc="52" packages="3" files="6" classes="6"/>
+<coverage generated="1733524151049" clover="3.2.0">
+  <project timestamp="1733524151049" name="All files">
+    <metrics statements="70" coveredstatements="58" conditionals="8" coveredconditionals="7" methods="9" coveredmethods="8" elements="87" coveredelements="73" complexity="0" loc="70" ncloc="70" packages="3" files="6" classes="6"/>
     <package name="backend">
       <metrics statements="10" coveredstatements="10" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
       <file name="index.js" path="D:\School\FERI-MAG-1\semester1\razvojInformacijskihResitevInStoritev\RIRS_samostojno\backend\index.js">
@@ -19,15 +19,33 @@
       </file>
     </package>
     <package name="backend.src">
-      <metrics statements="40" coveredstatements="34" conditionals="4" coveredconditionals="3" methods="6" coveredmethods="6"/>
+      <metrics statements="58" coveredstatements="46" conditionals="8" coveredconditionals="7" methods="8" coveredmethods="7"/>
       <file name="category.js" path="D:\School\FERI-MAG-1\semester1\razvojInformacijskihResitevInStoritev\RIRS_samostojno\backend\src\category.js">
-        <metrics statements="6" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <metrics statements="24" coveredstatements="17" conditionals="4" coveredconditionals="4" methods="3" coveredmethods="2"/>
         <line num="4" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
         <line num="7" count="3" type="stmt"/>
         <line num="8" count="3" type="stmt"/>
         <line num="10" count="3" type="stmt"/>
         <line num="12" count="0" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="5" type="stmt"/>
+        <line num="18" count="5" type="stmt"/>
+        <line num="19" count="5" type="stmt"/>
+        <line num="20" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="24" count="3" type="stmt"/>
+        <line num="25" count="3" type="cond" truecount="2" falsecount="0"/>
+        <line num="26" count="2" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="37" count="0" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="39" count="0" type="stmt"/>
+        <line num="43" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
       </file>
       <file name="db.js" path="D:\School\FERI-MAG-1\semester1\razvojInformacijskihResitevInStoritev\RIRS_samostojno\backend\src\db.js">
         <metrics statements="10" coveredstatements="8" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>

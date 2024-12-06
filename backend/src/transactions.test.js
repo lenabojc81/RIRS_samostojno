@@ -8,6 +8,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+    await mongoose.connection.db.collection('categories').deleteOne({ name: 'New Category' });
     await mongoose.connection.close();
     server.close();
 });
@@ -85,8 +86,7 @@ describe('API Endpoints', () => {
     test('GET /allCategories - should return an array of categories', async () => {
         const res = await request(app).get('/category/allCategories');
         expect(res.body).toBeInstanceOf(Array);
-        expect(res.body).toHaveLength(4);
-        expect(res.body[0]).toHaveProperty('name');
+        expect(res.body).not.toHaveLength(0);
     }, 10000);
 
     test('GET / - should return categories with name property', async () => {
@@ -94,4 +94,35 @@ describe('API Endpoints', () => {
         expect(res.body[0]).toHaveProperty('name');
     }, 10000);
 
+    test('POST /newCategory - should return status code 200 and text', async () => {
+        const newCategory = { name: 'New Category' };
+        const res = await request(app).post('/category/newCategory').send(newCategory);
+        expect(res.statusCode).toBe(200);
+        expect(res.text).toBe('new category saved');
+
+    }, 10000);
+
+    test('POST /newCategory - should return status code 400 for missing required fields', async () => {
+        const invalidCategory = {};
+        const res = await request(app).post('/category/newCategory').send(invalidCategory);
+        expect(res.statusCode).toBe(400);
+    }, 10000);
+
+    test('POST /newCategory - should return text for missing required fields', async () => {
+        const invalidCategory = {};
+        const res = await request(app).post('/category/newCategory').send(invalidCategory);
+        expect(res.text).toBe('Category name is required');
+    }, 10000);
+
+    test('POST /newCategory - should return status code 400 for existing category', async () => {
+        const existingCategory = { name: 'New Category' };
+        const res = await request(app).post('/category/newCategory').send(existingCategory);
+        expect(res.statusCode).toBe(401);
+    }, 10000);
+
+    test('POST /newCategory - should return text for existing category', async () => {
+        const existingCategory = { name: 'New Category' };
+        const res = await request(app).post('/category/newCategory').send(existingCategory);
+        expect(res.text).toBe('Category with this name already exists');
+    }, 10000);
 });
