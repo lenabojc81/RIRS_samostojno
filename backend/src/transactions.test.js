@@ -1,7 +1,6 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const {app, server} = require('../index');
-const Transaction = require('./models/transaction');
 const mongoUri = process.env.MONGO_URI;
 
 beforeAll(async () => {
@@ -13,7 +12,7 @@ afterAll(async () => {
     server.close();
 });
 
-describe('Transaction API Endpoints', () => {
+describe('API Endpoints', () => {
 
     test('GET /getTransactions - should return status code 200', async () => {
         const res = await request(app).get('/transaction/getTransactions');
@@ -31,13 +30,13 @@ describe('Transaction API Endpoints', () => {
     }, 10000);
 
     test('POST /newTransaction - should return status code 200', async () => {
-        const newTransaction = { _id: new mongoose.Types.ObjectId('000000000000000000000005'), name: 'New Transaction', amount: 200, expense: false, date: new Date() };
+        const newTransaction = { _id: new mongoose.Types.ObjectId('000000000000000000000005'), name: 'New Transaction', amount: 200, expense: false, date: new Date(), category: 'saving' };
         const res = await request(app).post('/transaction/newTransaction').send(newTransaction);
         expect(res.statusCode).toBe(200);
     }, 10000);
 
     test('POST /newTransaction - should add a new transaction', async () => {
-        const newTransaction = { _id: new mongoose.Types.ObjectId('000000000000000000000006'), name: 'New Transaction', amount: 200, expense: false, date: new Date() };
+        const newTransaction = { _id: new mongoose.Types.ObjectId('000000000000000000000006'), name: 'New Transaction', amount: 200, expense: false, date: new Date(), category: 'saving' };
         const res = await request(app).post('/transaction/newTransaction').send(newTransaction);
         expect(res.text).toBe('new transaction saved');
     }, 10000);
@@ -49,13 +48,13 @@ describe('Transaction API Endpoints', () => {
     }, 10000);
 
     test('PUT /editTransaction/:id - should return status code 200', async () => {
-        const updatedData = { name: 'Updated Transaction', amount: 300, expense: false, date: new Date() };
+        const updatedData = { name: 'Updated Transaction', amount: 300, expense: false, date: new Date(), category: 'saving' };
         const res = await request(app).put(`/transaction/editTransaction/000000000000000000000005`).send(updatedData);
         expect(res.statusCode).toBe(200);
     }, 10000);
 
     test('PUT /editTransaction/:id - should return updated transaction', async () => {
-        const updatedData = { name: 'Updated Transaction', amount: 300, expense: false, date: new Date() };
+        const updatedData = { name: 'Updated Transaction', amount: 300, expense: false, date: new Date(), category: 'saving' };
         const res = await request(app).put(`/transaction/editTransaction/000000000000000000000005`).send(updatedData);
         expect(res.body.name).toBe('Updated Transaction');
         expect(res.body.amount).toBe(300);
@@ -63,7 +62,7 @@ describe('Transaction API Endpoints', () => {
     }, 10000);
 
     test('PUT /editTransaction/:id - should return status code 404 for non-existent transaction', async () => {
-        const updatedData = { name: 'Updated Transaction', amount: 300, expense: false, date: new Date() };
+        const updatedData = { name: 'Updated Transaction', amount: 300, expense: false, date: new Date(), category: 'saving' };
         const res = await request(app).put(`/transaction/editTransaction/000000000000000000000000`).send(updatedData);
         expect(res.statusCode).toBe(404);
     }, 10000);
@@ -77,4 +76,22 @@ describe('Transaction API Endpoints', () => {
         const res = await request(app).delete(`/transaction/deleteTransaction/000000000000000000000005`);
         expect(res.text).toBe('transaction deleted');
     }, 10000);
+
+    test('GET /allCategories - should return status code 200', async () => {
+        const res = await request(app).get('/category/allCategories');
+        expect(res.statusCode).toBe(200);
+    }, 10000);
+
+    test('GET /allCategories - should return an array of categories', async () => {
+        const res = await request(app).get('/category/allCategories');
+        expect(res.body).toBeInstanceOf(Array);
+        expect(res.body).toHaveLength(4);
+        expect(res.body[0]).toHaveProperty('name');
+    }, 10000);
+
+    test('GET / - should return categories with name property', async () => {
+        const res = await request(app).get('/category/allCategories');
+        expect(res.body[0]).toHaveProperty('name');
+    }, 10000);
+
 });

@@ -5,6 +5,7 @@ const transactionSchema = new Schema({
     amount: { type: Number, required: true },
     expense: { type: Boolean, required: true },
     date: { type: Date, required: true },
+    category: { type: String, required: true }
 });
 
 export default mongoose.model('Transaction', transactionSchema);
