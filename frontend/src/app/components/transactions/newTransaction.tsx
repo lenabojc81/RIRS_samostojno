@@ -4,12 +4,17 @@ import React, { useState } from "react";
 import { ITransaction, initialTransaction } from "../../../interfaces/ITransactions";
 import { baseURL } from "../../../../global";
 import { redirect } from "next/navigation";
+import Category from "./category";
 
 export default function NewTransaction() {
     const [transaction, setTransaction] = useState<ITransaction>(initialTransaction);
 
     const handleTransactionType = (isExpense: boolean) => {
         setTransaction({ ...transaction, expense: isExpense, date: new Date() });
+    };
+
+    const handleCategorySelect = (selectedCategory: string) => {
+        setTransaction({ ...transaction, category: selectedCategory });
     };
 
     const saveTransaction = async () => {
@@ -20,6 +25,10 @@ export default function NewTransaction() {
         }
         if (!transaction.amount || transaction.amount <= 0) {
             alert('Validation Error: Please enter a valid amount greater than 0.');
+            return;
+        }
+        if (!transaction.category) {
+            alert('Validation Error: Please select a category.');
             return;
         }
         try {
@@ -99,6 +108,8 @@ export default function NewTransaction() {
                     </button>
                 </div>
             </div>
+
+            <Category onCategorySelect={handleCategorySelect}/>
 
             <button onClick={saveTransaction} className="btn btn-success w-100">
                 Save Transaction

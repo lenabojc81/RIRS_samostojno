@@ -56,6 +56,9 @@ export default function TransactionList() {
                 <p className="transactionName mb-1 fw-bold">{transaction.name}</p>
                 <p className="transactionAmount mb-0 text-muted">€{transaction.amount.toFixed(2)}</p>
             </div>
+            <div className="transactionCategory mb-0">
+                <span className="transactionCategory text-muted">{transaction.category}</span>
+            </div>
             <p className="transactionDate text-muted ms-3" style={{marginBottom:0}}>
                 {new Date(transaction.date).toLocaleDateString()}
             </p>

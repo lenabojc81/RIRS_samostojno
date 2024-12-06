@@ -69,6 +69,7 @@ const TransactionDetails: React.FC<TransactionDetailsProps> = ({ transaction }) 
             <h3>{transaction.name}</h3>
             <p><strong>Amount:</strong> €{transaction.amount.toFixed(2)}</p>
             <p><strong>Type:</strong> {transaction.expense ? "Expense" : "Income"}</p>
+            <p><strong>Category:</strong> {transaction.category}</p>
             <p><strong>Date:</strong> {new Date(transaction.date).toLocaleDateString()}</p>
             <div className="row justify-content-center">
             {isEditing ? (

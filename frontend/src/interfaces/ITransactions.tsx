@@ -4,6 +4,7 @@ export interface ITransaction {
     amount: number;
     expense: boolean;
     date: Date;
+    category: string;
 }
 
 export const initialTransaction: ITransaction = {
@@ -11,4 +12,5 @@ export const initialTransaction: ITransaction = {
     amount: 0,
     expense: false,
     date: new Date(),
+    category: "",
 };
