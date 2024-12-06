@@ -40,17 +40,12 @@ jobs:
         cd backend
         npm ci
 
-    - name: Build backend  # Gradnja backenda
-      run: |
-        cd backend
-        npm run build
-
     - name: Upload backend artifacts  # Naložitev artefaktov za backend
       uses: actions/upload-artifact@v4
       with:
         name: backend-build  # Ime artefakta
         path: |
-          backend/build/  
+          backend/  
           backend/node_modules/  
         # Pot do celotne kode
         # Nameščene odvisnosti
