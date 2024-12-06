@@ -40,12 +40,17 @@ jobs:
         cd frontend
         npm ci
 
+    - name: Build frontend  # Gradnja frontenda
+      run: |
+        cd frontend
+        npm run build
+
     - name: Upload frontend artifacts  # Naložitev artefaktov za frontend
       uses: actions/upload-artifact@v4
       with:
         name: frontend-build  # Ime artefakta
         path: |
-          frontend/  
+          frontend/dist/  
           frontend/node_modules/  
         # Pot do celotne kode
         # Nameščene odvisnosti
