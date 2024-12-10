@@ -49,7 +49,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: frontend-build  # Ime artefakta
-        path: frontend/dist/  
+        path: frontend/out/  
         # Pot do celotne kode
         # Nameščene odvisnosti
 
@@ -132,7 +132,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: frontend-build  
-        path: frontend/dist/ 
+        path: frontend/out/ 
 
     - name: Setup Firebase CLI  
       run: |
