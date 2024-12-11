@@ -1,5 +1,4 @@
 import express from 'express';
-import { connectDB, router as dbRouter } from './src/db.js';
 import transactionRouter from './src/transactions.js';
 import cors from 'cors';
 import categoryRouter from './src/category.js';
@@ -7,10 +6,8 @@ import categoryRouter from './src/category.js';
 const app = express();
 const port = 8080;
 
-connectDB();
 app.use(express.json());
 app.use(cors());
-app.use(dbRouter);
 app.use('/transaction', transactionRouter);
 app.use('/category', categoryRouter);
 

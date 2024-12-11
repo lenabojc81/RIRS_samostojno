@@ -1,20 +1,34 @@
 const request = require('supertest');
-const mongoose = require('mongoose');
-const {app, server} = require('../index');
-const mongoUri = process.env.MONGO_URI;
+const { app, server } = require('../index');
+const fs = require('fs/promises');
+const path = require('path');
+
+const categoriesPath = path.join(process.cwd(), 'data', 'categories.json');
+const transactionsPath = path.join(process.cwd(), 'data', 'transactions.json');
+
+const resetJSONFile = async (filePath, data) => {
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2));
+};
+const readJSONFile = async (filePath) => {
+    const data = await fs.readFile(filePath, 'utf-8');
+    return JSON.parse(data);
+};
+
+let originalCategories;
+let originalTransactions;
 
 beforeAll(async () => {
-    await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
+    originalCategories = await readJSONFile(categoriesPath);
+    originalTransactions = await readJSONFile(transactionsPath);
 });
 
 afterAll(async () => {
-    await mongoose.connection.db.collection('categories').deleteOne({ name: 'New Category' });
-    await mongoose.connection.close();
+    await resetJSONFile(categoriesPath, originalCategories);
+    await resetJSONFile(transactionsPath, originalTransactions);
     server.close();
 });
 
 describe('API Endpoints', () => {
-
     test('GET /getTransactions - should return status code 200', async () => {
         const res = await request(app).get('/transaction/getTransactions');
         expect(res.statusCode).toBe(200);
@@ -31,15 +45,18 @@ describe('API Endpoints', () => {
     }, 10000);
 
     test('POST /newTransaction - should return status code 200', async () => {
-        const newTransaction = { _id: new mongoose.Types.ObjectId('000000000000000000000005'), name: 'New Transaction', amount: 200, expense: false, date: new Date(), category: 'saving' };
+        const newTransaction = { name: 'New Transaction', amount: 200, expense: false, date: new Date(), category: 'saving' };
         const res = await request(app).post('/transaction/newTransaction').send(newTransaction);
         expect(res.statusCode).toBe(200);
+        expect(res.text).toBe('New transaction saved');
     }, 10000);
 
     test('POST /newTransaction - should add a new transaction', async () => {
-        const newTransaction = { _id: new mongoose.Types.ObjectId('000000000000000000000006'), name: 'New Transaction', amount: 200, expense: false, date: new Date(), category: 'saving' };
+        const newTransaction = { name: 'Another Transaction', amount: 150, expense: true, date: new Date(), category: 'food' };
         const res = await request(app).post('/transaction/newTransaction').send(newTransaction);
-        expect(res.text).toBe('new transaction saved');
+        const transactions = await readJSONFile(transactionsPath);
+        const addedTransaction = transactions.find((t) => t.name === 'Another Transaction');
+        expect(addedTransaction).toBeDefined();
     }, 10000);
 
     test('POST /newTransaction - should return status code 400 for missing required fields', async () => {
@@ -50,13 +67,19 @@ describe('API Endpoints', () => {
 
     test('PUT /editTransaction/:id - should return status code 200', async () => {
         const updatedData = { name: 'Updated Transaction', amount: 300, expense: false, date: new Date(), category: 'saving' };
-        const res = await request(app).put(`/transaction/editTransaction/000000000000000000000005`).send(updatedData);
+        const transactions = await readJSONFile(transactionsPath);
+        const transactionId = transactions[0]._id.$oid;
+
+        const res = await request(app).put(`/transaction/editTransaction/${transactionId}`).send(updatedData);
         expect(res.statusCode).toBe(200);
     }, 10000);
 
     test('PUT /editTransaction/:id - should return updated transaction', async () => {
         const updatedData = { name: 'Updated Transaction', amount: 300, expense: false, date: new Date(), category: 'saving' };
-        const res = await request(app).put(`/transaction/editTransaction/000000000000000000000005`).send(updatedData);
+        const transactions = await readJSONFile(transactionsPath);
+        const transactionId = transactions[0]._id.$oid;
+
+        const res = await request(app).put(`/transaction/editTransaction/${transactionId}`).send(updatedData);
         expect(res.body.name).toBe('Updated Transaction');
         expect(res.body.amount).toBe(300);
         expect(res.body.expense).toBe(false);
@@ -64,18 +87,17 @@ describe('API Endpoints', () => {
 
     test('PUT /editTransaction/:id - should return status code 404 for non-existent transaction', async () => {
         const updatedData = { name: 'Updated Transaction', amount: 300, expense: false, date: new Date(), category: 'saving' };
-        const res = await request(app).put(`/transaction/editTransaction/000000000000000000000000`).send(updatedData);
+        const res = await request(app).put(`/transaction/editTransaction/nonexistent-id`).send(updatedData);
         expect(res.statusCode).toBe(404);
     }, 10000);
 
     test('DELETE /deleteTransaction/:id - should return status code 200', async () => {
-        const res = await request(app).delete(`/transaction/deleteTransaction/000000000000000000000006`);
-        expect(res.statusCode).toBe(200);
-    }, 10000);
+        const transactions = await readJSONFile(transactionsPath);
+        const transactionId = transactions[0]._id.$oid;
 
-    test('DELETE /deleteTransaction/:id - should return message "transaction deleted"', async () => {
-        const res = await request(app).delete(`/transaction/deleteTransaction/000000000000000000000005`);
-        expect(res.text).toBe('transaction deleted');
+        const res = await request(app).delete(`/transaction/deleteTransaction/${transactionId}`);
+        expect(res.statusCode).toBe(200);
+        expect(res.text).toBe('Transaction deleted');
     }, 10000);
 
     test('GET /allCategories - should return status code 200', async () => {
@@ -98,31 +120,36 @@ describe('API Endpoints', () => {
         const newCategory = { name: 'New Category' };
         const res = await request(app).post('/category/newCategory').send(newCategory);
         expect(res.statusCode).toBe(200);
-        expect(res.text).toBe('new category saved');
-
+        expect(res.text).toBe('New category saved');
     }, 10000);
 
     test('POST /newCategory - should return status code 400 for missing required fields', async () => {
         const invalidCategory = {};
         const res = await request(app).post('/category/newCategory').send(invalidCategory);
         expect(res.statusCode).toBe(400);
+        expect(res.text).toBe('Category name is required');
     }, 10000);
 
     test('POST /newCategory - should return text for missing required fields', async () => {
         const invalidCategory = {};
         const res = await request(app).post('/category/newCategory').send(invalidCategory);
-        expect(res.text).toBe('Category name is required');
-    }, 10000);
+        expect(res.text).toBe('Category name is required'); 
+    }, 10000);    
 
-    test('POST /newCategory - should return status code 400 for existing category', async () => {
+    test('POST /newCategory - should return status code 401 for existing category', async () => {
         const existingCategory = { name: 'New Category' };
         const res = await request(app).post('/category/newCategory').send(existingCategory);
         expect(res.statusCode).toBe(401);
     }, 10000);
 
-    test('POST /newCategory - should return text for existing category', async () => {
+    test('POST /newCategory - should return status code 401 for existing category', async () => {
         const existingCategory = { name: 'New Category' };
         const res = await request(app).post('/category/newCategory').send(existingCategory);
         expect(res.text).toBe('Category with this name already exists');
+    }, 10000);
+
+    test('DELETE /deleteTransaction/:id - should return status code 404 for non-existent transaction', async () => {
+        const res = await request(app).delete(`/transaction/deleteTransaction/nonexistent-id`);
+        expect(res.statusCode).toBe(404);
     }, 10000);
 });

@@ -1,0 +1,145 @@
+[
+  {
+    "_id": {
+      "$oid": "6751f079f285f61991d3aaa7"
+    },
+    "name": "caj",
+    "amount": 2,
+    "expense": true,
+    "date": {
+      "$date": "2024-12-05T18:27:04.889Z"
+    },
+    "category": "essential",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6751f089f285f61991d3aaab"
+    },
+    "name": "placa",
+    "amount": 1800,
+    "expense": false,
+    "date": {
+      "$date": "2024-12-05T18:27:20.148Z"
+    },
+    "category": "saving",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6751f1a6efffcda52955263b"
+    },
+    "name": "čaj z mlekom",
+    "amount": 2.2,
+    "expense": true,
+    "date": {
+      "$date": "2024-12-05T18:32:05.218Z"
+    },
+    "category": "essential",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6751f1b4efffcda52955263f"
+    },
+    "name": "miklavz",
+    "amount": 20,
+    "expense": false,
+    "date": {
+      "$date": "2024-12-05T18:32:19.930Z"
+    },
+    "category": "leisure",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6751f1beefffcda529552643"
+    },
+    "name": "čajnik",
+    "amount": 50,
+    "expense": true,
+    "date": {
+      "$date": "2024-12-05T18:32:29.740Z"
+    },
+    "category": "essential",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6751f1caefffcda529552647"
+    },
+    "name": "macka",
+    "amount": 300,
+    "expense": true,
+    "date": {
+      "$date": "2024-12-05T18:32:41.488Z"
+    },
+    "category": "leisure",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6751f1d6efffcda52955264b"
+    },
+    "name": "musical",
+    "amount": 40,
+    "expense": true,
+    "date": {
+      "$date": "2024-12-05T18:32:53.896Z"
+    },
+    "category": "leisure",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6751f225efffcda52955264f"
+    },
+    "name": "bozicnica",
+    "amount": 500,
+    "expense": false,
+    "date": {
+      "$date": "2024-12-05T18:34:12.774Z"
+    },
+    "category": "saving",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6751f238efffcda529552653"
+    },
+    "name": "film",
+    "amount": 10,
+    "expense": true,
+    "date": {
+      "$date": "2024-12-05T18:34:31.516Z"
+    },
+    "category": "leisure",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "6751f24befffcda529552657"
+    },
+    "name": "caj",
+    "amount": 2,
+    "expense": true,
+    "date": {
+      "$date": "2024-12-05T18:34:50.277Z"
+    },
+    "category": "essential",
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "675368a140df7f46c299547c"
+    },
+    "name": "sushi",
+    "amount": 15,
+    "expense": true,
+    "date": {
+      "$date": "2024-12-06T21:11:58.089Z"
+    },
+    "category": "food",
+    "__v": 0
+  }
+]

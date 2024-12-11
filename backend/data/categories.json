@@ -1,0 +1,26 @@
+[
+  {
+    "_id": {
+      "$oid": "6752e44ead21bfb8e2e57ca2"
+    },
+    "name": "essential"
+  },
+  {
+    "_id": {
+      "$oid": "6752e470ad21bfb8e2e57ca3"
+    },
+    "name": "leisure"
+  },
+  {
+    "_id": {
+      "$oid": "6752e496ad21bfb8e2e57ca4"
+    },
+    "name": "food"
+  },
+  {
+    "_id": {
+      "$oid": "6752e4bfad21bfb8e2e57ca5"
+    },
+    "name": "savings"
+  }
+]

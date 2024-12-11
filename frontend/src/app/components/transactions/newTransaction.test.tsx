@@ -36,12 +36,10 @@ describe("NewTransaction Component", () => {
 
         const saveButton = screen.getByText(/Save Transaction/i);
 
-        // Click the save button without filling in the form
         await act(async () => {
             fireEvent.click(saveButton);
         });
 
-        // Verify the alert was called with the correct validation message
         expect(global.alert).toHaveBeenCalledWith(
             "Validation Error: Please enter the name of the transaction."
         );
@@ -53,14 +51,12 @@ describe("NewTransaction Component", () => {
         const nameInput = screen.getByLabelText(/Name of Transaction/i);
         const saveButton = screen.getByText(/Save Transaction/i);
 
-        // Fill in the name but leave the amount invalid (default 0)
         fireEvent.change(nameInput, { target: { value: "Test Transaction" } });
 
         await act(async () => {
             fireEvent.click(saveButton);
         });
 
-        // Verify the alert was called with the correct validation message
         expect(global.alert).toHaveBeenCalledWith(
             "Validation Error: Please enter a valid amount greater than 0."
         );
@@ -72,21 +68,16 @@ describe("NewTransaction Component", () => {
         const incomeButton = screen.getByText(/Income/i);
         const expenseButton = screen.getByText(/Expense/i);
 
-        // Initial state: Income button should be active
         expect(incomeButton).toHaveClass("btn-primary");
         expect(expenseButton).toHaveClass("btn-outline-primary");
 
-        // Click Expense button
         fireEvent.click(expenseButton);
 
-        // Now, Expense button should be active
         expect(expenseButton).toHaveClass("btn-primary");
         expect(incomeButton).toHaveClass("btn-outline-primary");
 
-        // Click Income button
         fireEvent.click(incomeButton);
 
-        // Income button should be active again
         expect(incomeButton).toHaveClass("btn-primary");
         expect(expenseButton).toHaveClass("btn-outline-primary");
     });
