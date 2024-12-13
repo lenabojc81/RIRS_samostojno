@@ -1,1 +1,1 @@
-export const baseURL = "http://192.168.1.6:8080";
+export const baseURL = "https://ttbackend-rirs-8084a2653d0e.herokuapp.com";

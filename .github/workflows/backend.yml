@@ -115,3 +115,19 @@ jobs:
       run: |
         docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/backend:${{ github.sha }}
+
+    # Deploy na Heroku
+  deploy-to-heroku:
+    needs: test-backend  # Izvede se po uspešnem testiranju
+    runs-on: ubuntu-latest
+  
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+  
+    - name: Deploy to Heroku
+      run: |
+        git subtree push --prefix backend heroku main
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_APP_NAME: "ttbackend-rirs"
