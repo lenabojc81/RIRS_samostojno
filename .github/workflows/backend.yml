@@ -133,7 +133,7 @@ jobs:
     - name: Pull changes from Heroku
       run: |
         git fetch heroku
-        git pull heroku main --allow-unrelated-histories
+        git pull heroku main --strategy=recursive -X ours --allow-unrelated-histories
     
     - name: Deploy to Heroku
       run: |
