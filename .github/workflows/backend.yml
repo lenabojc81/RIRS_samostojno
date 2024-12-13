@@ -45,8 +45,7 @@ jobs:
       with:
         name: backend-build  # Ime artefakta
         path: |
-          backend/  
-          backend/node_modules/  
+          backend/dist/  
         # Pot do celotne kode
         # Nameščene odvisnosti
 
@@ -130,16 +129,10 @@ jobs:
       with:
         name: backend-build
 
-    - name: Set up Heroku remote
-      run: |
-        git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-        git fetch heroku
-
-    - name: Pull changes from Heroku with merge
-      run: |
-        git fetch heroku
-        git merge FETCH_HEAD --no-edit
-    
     - name: Deploy to Heroku
       run: |
-        git subtree push --prefix backend heroku main --force
+        git init
+        git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+        git add .
+        git commit -m "Deploy build artifacts"
+        git push heroku main --force
