@@ -130,16 +130,10 @@ jobs:
         git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
         git fetch heroku
 
-    - name: Configure Git for Pull
-      run: |
-        git config pull.rebase false
-        git config pull.ff only
-    
-    
-    - name: Pull changes from Heroku
+    - name: Pull changes from Heroku with merge
       run: |
         git fetch heroku
-        git pull heroku main --strategy=recursive -X ours --allow-unrelated-histories
+        git merge FETCH_HEAD --no-edit
     
     - name: Deploy to Heroku
       run: |
