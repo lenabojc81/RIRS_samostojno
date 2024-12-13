@@ -142,4 +142,4 @@ jobs:
     
     - name: Deploy to Heroku
       run: |
-        git subtree push --prefix backend heroku main
+        git subtree push --prefix backend heroku main --force
