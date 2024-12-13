@@ -131,10 +131,11 @@ jobs:
         name: backend-build
         path: backend/
 
-    - name: Deploy to Heroku
+    - name: Set up Heroku remote
       run: |
-        git init
         git remote add heroku https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
-        git add .
-        git commit -m "Deploy build artifacts"
-        git push heroku main --force
+        git fetch heroku
+  
+    - name: Deploy backend to Heroku
+      run: |
+        git subtree push --prefix backend heroku main --force
