@@ -4,7 +4,7 @@ import cors from 'cors';
 import categoryRouter from './src/category.js';
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;;
 
 app.use(express.json());
 app.use(cors());
