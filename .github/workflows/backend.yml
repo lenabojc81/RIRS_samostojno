@@ -137,4 +137,5 @@ jobs:
       run: heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
 
     - name: Deploy to Heroku
-      run: git subtree push --prefix backend heroku main --force
+      run: |
+        git push heroku `git subtree split --prefix backend main`:main --force
