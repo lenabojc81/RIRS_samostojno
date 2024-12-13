@@ -125,17 +125,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install Heroku CLI
-      run: curl https://cli-assets.heroku.com/install.sh | sh
-
     - name: Login to Heroku
-      run: heroku auth:token
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-
-    - name: Add Heroku remote
-      run: git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+      run: heroku auth:token
 
     - name: Deploy to Heroku
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
       run: |
-        git push heroku `git subtree split --prefix backend main`:main --force
+        git subtree push --prefix backend heroku main
