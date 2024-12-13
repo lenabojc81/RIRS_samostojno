@@ -45,7 +45,8 @@ jobs:
       with:
         name: backend-build  # Ime artefakta
         path: |
-          backend/dist/  
+          backend/
+          backend/node_modules/  
         # Pot do celotne kode
         # Nameščene odvisnosti
 
@@ -128,6 +129,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: backend-build
+        path: backend/
 
     - name: Deploy to Heroku
       run: |
