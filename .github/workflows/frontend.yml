@@ -160,7 +160,7 @@ jobs:
 
       - name: Upload coverage report
         run: |
-          cd frontend/coverage/lcov.info .
+          cd frontend/coverage/lcov.info
         
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
