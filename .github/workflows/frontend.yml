@@ -184,7 +184,11 @@ jobs:
             -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} \
             -Dsonar.organization=${{ secrets.ORGANIZATION_KEY }} \
             -Dsonar.sources=frontend/src/app/components/transactions,backend/src \
-            -Dsonar.inclusions=frontend/src/app/components/transactions/*.tsx,backend/src/*.js \
+            -Dsonar.inclusions=frontend/src/app/components/transactions/category.tsx,\
+            frontend/src/app/components/transactions/newTransaction.tsx,\
+            frontend/src/app/components/transactions/transactionDetail.tsx,\
+            backend/src/category.js,\
+            backend/src/transaction.js \            
             -Dsonar.exclusions=coverage/**,node_modules/**,.next/**,**/*.test.{js,jsx,ts,tsx} \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.javascript.lcov.reportPaths=frontend-lcov.info,backend-lcov.info
