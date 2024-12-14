@@ -104,7 +104,7 @@ jobs:
     if: github.ref == 'refs/heads/production' 
 
     environment:
-      name: production
+      name: Production
 
     steps:
     - name: Checkout code
