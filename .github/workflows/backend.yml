@@ -91,10 +91,15 @@ jobs:
         name: backend-coverage  # Ime artefakta
         path: backend/coverage/  # Pot do poročila o pokritosti kode
 
-  # Gradnja Docker slike in nalaganje na Docker Hub
-  dockerize-and-push:
+  # Gradnja Docker slike in nalaganje na Docker Hub - Production
+  dockerize-and-push-prod:
     needs: test-backend  # Izvede se po uspešnem testiranju
     runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/production' 
+
+    environment:
+      name: production
 
     steps:
     - name: Checkout code
@@ -108,12 +113,40 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:latest ./backend
-        docker tag ${{ secrets.DOCKER_USERNAME }}/backend:latest ${{ secrets.DOCKER_USERNAME }}/backend:${{ github.sha }}
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:prod ./backend
+        docker tag ${{ secrets.DOCKER_USERNAME }}/backend:prod ${{ secrets.DOCKER_USERNAME }}/backend:${{ github.sha }}
 
     - name: Push Docker image to Docker Hub
       run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/backend:prod
+        docker push ${{ secrets.DOCKER_USERNAME }}/backend:${{ github.sha }}
+
+  # Gradnja Docker slike in nalaganje na Docker Hub - Development
+  dockerize-and-push-dev:
+    needs: test-backend  # Izvede se po uspešnem testiranju
+    runs-on: ubuntu-latest
+    environment: 
+      name: development
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+
+    - name: Build Docker image
+      run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/backend:dev ./backend
+        docker tag ${{ secrets.DOCKER_USERNAME }}/backend:dev ${{ secrets.DOCKER_USERNAME }}/backend:${{ github.sha }}
+
+    - name: Push Docker image to Docker Hub
+      run: |
+        docker push ${{ secrets.DOCKER_USERNAME }}/backend:dev
         docker push ${{ secrets.DOCKER_USERNAME }}/backend:${{ github.sha }}
 
   # Job za deploy na Heroku
