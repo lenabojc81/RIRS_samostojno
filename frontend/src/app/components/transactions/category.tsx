@@ -22,7 +22,6 @@ export default function Category({onCategorySelect}: {onCategorySelect: (categor
             }
         } catch (error) {
             alert('Error: An error occurred while fetching categories.');
-            console.error(error);
         }
     };
 

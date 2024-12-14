@@ -1,9 +1,3 @@
-// module.exports = {
-//     collectCoverage: true,
-//     coverageDirectory: 'coverage',
-//     testEnvironment: 'jsdom',
-// };
-
 const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({
@@ -19,8 +13,8 @@ const customJestConfig = {
     coverageDirectory: 'coverage', // Specify the directory where coverage reports are saved
     coverageReporters: ['json', 'lcov', 'text', 'clover'], // Define coverage report formats
     collectCoverageFrom: [
-        'components/**/*.{js,jsx,ts,tsx}', // Include components in coverage
-        'pages/**/*.{js,jsx,ts,tsx}', // Include pages in coverage
+        'src/app/components/transactions/**/*.{js,jsx,ts,tsx}', // Specifically include components directory in coverage
+        '!**/*.test.{js,jsx,ts,tsx}', // Exclude test files
         '!**/node_modules/**', // Exclude node_modules
         '!**/.next/**', // Exclude Next.js build files
     ],

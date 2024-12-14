@@ -33,7 +33,6 @@ export default function NewCategory() {
             }
         } catch (error) {
             alert('Error: An error occurred while saving the transaction.');
-            console.error(error);
         }
 
         if (saved) {

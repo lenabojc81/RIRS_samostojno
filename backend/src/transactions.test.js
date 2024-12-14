@@ -152,4 +152,16 @@ describe('API Endpoints', () => {
         const res = await request(app).delete(`/transaction/deleteTransaction/nonexistent-id`);
         expect(res.statusCode).toBe(404);
     }, 10000);
+
+    test('DELETE /deleteCategory/:name - should return status code 200', async () => {
+        const res = await request(app).delete('/category/deleteCategory/New Category');
+        expect(res.statusCode).toBe(200);
+        expect(res.text).toBe('Category deleted successfully');
+    });
+
+    test('DELETE /deleteCategory/:name - should return status code 404 for non-existent category', async () => {
+        const res = await request(app).delete('/category/deleteCategory/Nonexistent Category');
+        expect(res.statusCode).toBe(404);
+        expect(res.text).toBe('Category not found');
+    });
 });

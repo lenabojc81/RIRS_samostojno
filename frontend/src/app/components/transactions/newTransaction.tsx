@@ -48,7 +48,6 @@ export default function NewTransaction() {
             }
         } catch (error) {
             alert('Error: An error occurred while saving the transaction.');
-            console.error(error);
         }
 
         if (saved) {
