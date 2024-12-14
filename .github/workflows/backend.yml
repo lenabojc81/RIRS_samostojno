@@ -1,7 +1,7 @@
 # Ime pipeline-a za backend
 name: Backend CI
 
-# Dogodki, ki sprožijo workflow (push in pull request na glavno vejo) 
+# Dogodki, ki sprožijo workflow (push in pull request na glavno vejo)
 on:
   push:
     branches:
@@ -173,7 +173,7 @@ jobs:
   
     - name: Deploy backend to Heroku
       run: |
-        git checkout production
+        git checkout main
         git subtree split --prefix backend -b deploy-branch
         git push -f heroku deploy-branch:main
         git branch -D deploy-branch
