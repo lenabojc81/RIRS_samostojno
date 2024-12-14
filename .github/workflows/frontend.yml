@@ -150,17 +150,27 @@ jobs:
         run: |
           cd frontend
           npm ci
+          cd ../backend
+          npm ci
 
-      - name: Collect coverage (React-specific)
+      - name: Collect coverage (frontend)
         run: |
           cd frontend
           npm run test:ci -- --coverage
         env:
           CI: true
 
+      - name: Collect coverage (backend)
+        run: |
+          cd backend
+          npm run test:ci
+        env:
+          CI: true
+
       - name: Upload coverage report
         run: |
-          cp frontend/coverage/lcov.info .
+          cp frontend/coverage/lcov.info frontend-lcov.info
+          cp backend/coverage/lcov.info backend-lcov.info
         
       - name: Run SonarCloud analysis
         env:
@@ -169,9 +179,9 @@ jobs:
           npx sonar-scanner \
             -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} \
             -Dsonar.organization=${{ secrets.ORGANIZATION_KEY }} \
-            -Dsonar.sources=./frontend \
+            -Dsonar.sources=frontend,backend \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.javascript.lcov.reportPaths=frontend-lcov.info,backend-lcov.info
       
   # Gradnja Docker slike in nalaganje na Docker Hub - Production
   dockerize-and-push-prod:
