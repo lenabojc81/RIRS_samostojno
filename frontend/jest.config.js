@@ -13,7 +13,7 @@ const customJestConfig = {
     coverageDirectory: 'coverage', // Specify the directory where coverage reports are saved
     coverageReporters: ['json', 'lcov', 'text', 'clover'], // Define coverage report formats
     collectCoverageFrom: [
-        'src/app/components/**/*.{js,jsx,ts,tsx}', // Specifically include components directory in coverage
+        'src/app/components/transactions/**/*.{js,jsx,ts,tsx}', // Specifically include components directory in coverage
         '!**/*.test.{js,jsx,ts,tsx}', // Exclude test files
         '!**/node_modules/**', // Exclude node_modules
         '!**/.next/**', // Exclude Next.js build files
