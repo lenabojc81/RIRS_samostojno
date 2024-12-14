@@ -1,7 +1,7 @@
 # Ime pipeline-a za backend
 name: Backend CI
 
-# Dogodki, ki sprožijo workflow (push in pull request na glavno vejo)
+# Dogodki, ki sprožijo workflow (push in pull request na glavno vejo) 
 on:
   push:
     branches:
