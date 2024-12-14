@@ -104,7 +104,7 @@ jobs:
     if: github.ref == 'refs/heads/production' 
 
     environment:
-      name: production
+      name: Production
 
     steps:
     - name: Checkout code
@@ -130,7 +130,7 @@ jobs:
   dockerize-and-push-dev:
     needs: test-frontend
     runs-on: ubuntu-latest
-    environment: development
+    environment: Development
     if: github.ref == 'refs/heads/main' 
 
     steps:

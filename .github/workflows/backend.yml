@@ -6,9 +6,11 @@ on:
   push:
     branches:
       - main
+      - production
   pull_request:
     branches:
       - main
+      - production
 
 jobs:
   # Job za gradnjo backenda
@@ -99,7 +101,7 @@ jobs:
     if: github.ref == 'refs/heads/production' 
 
     environment:
-      name: production
+      name: Production
 
     steps:
     - name: Checkout code
@@ -126,7 +128,7 @@ jobs:
     needs: test-backend  # Izvede se po uspešnem testiranju
     runs-on: ubuntu-latest
     environment: 
-      name: development
+      name: Development
     if: github.ref == 'refs/heads/main'
 
     steps:
