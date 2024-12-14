@@ -6,9 +6,11 @@ on:
   push:
     branches:
       - main
+      - production
   pull_request:
     branches:
       - main
+      - production
 
 jobs:
   # Job za gradnjo frontenda
@@ -94,10 +96,15 @@ jobs:
         name: frontend-coverage  # Ime artefakta
         path: frontend/coverage/  # Pot do poročila o pokritosti kode
 
-  # Gradnja Docker slike in nalaganje na Docker Hub
-  dockerize-and-push:
-    needs: test-frontend  # Izvede se po uspešnem testiranju
+  # Gradnja Docker slike in nalaganje na Docker Hub - Production
+  dockerize-and-push-prod:
+    needs: [test-frontend]
     runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/production' 
+
+    environment:
+      name: production
 
     steps:
     - name: Checkout code
@@ -111,12 +118,39 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:latest ./frontend
-        docker tag ${{ secrets.DOCKER_USERNAME }}/frontend:latest ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:prod ./frontend
+        docker tag ${{ secrets.DOCKER_USERNAME }}/frontend:prod ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
 
     - name: Push Docker image to Docker Hub
       run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/frontend:prod
+        docker push ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
+
+  # Gradnja Docker slike in nalaganje na Docker Hub - Development
+  dockerize-and-push-dev:
+    needs: test-frontend
+    runs-on: ubuntu-latest
+    environment: development
+    if: github.ref == 'refs/heads/main' 
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Login to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_TOKEN }}
+
+    - name: Build Docker image
+      run: |
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:dev ./frontend
+        docker tag ${{ secrets.DOCKER_USERNAME }}/frontend:dev ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
+
+    - name: Push Docker image to Docker Hub
+      run: |
+        docker push ${{ secrets.DOCKER_USERNAME }}/frontend:dev
         docker push ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
 
   # Job za deploy na Firebase Hosting
