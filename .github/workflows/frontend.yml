@@ -153,30 +153,30 @@ jobs:
           cd ../backend
           npm ci
 
-      - name: Collect coverage (frontend)
+      - name: Run tests and collect coverage (Frontend)
         run: |
           cd frontend
           npm run test:ci -- --coverage
+          cp coverage/lcov.info ../frontend-lcov.info
         env:
           CI: true
 
-      - name: Collect coverage (backend)
+      - name: Run tests and collect coverage (Backend)
         run: |
           cd backend
           npm run test:ci
+          cp coverage/lcov.info ../backend-lcov.info
         env:
           CI: true
 
-      - name: Upload coverage report
+      - name: Debug LCOV Files
         run: |
-          cp frontend/coverage/lcov.info frontend-lcov.info
-          cp backend/coverage/lcov.info backend-lcov.info
+          echo "Frontend LCOV:"
+          cat frontend-lcov.info
+          echo "Backend LCOV:"
+          cat backend-lcov.info
 
-      - name: Combine LCOV Files
-        run: |
-          cat frontend/coverage/lcov.info backend/coverage/lcov.info > combined-lcov.info
-
-      - name: Run SonarCloud analysis
+      - name: Run SonarCloud Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
@@ -185,8 +185,9 @@ jobs:
             -Dsonar.organization=${{ secrets.ORGANIZATION_KEY }} \
             -Dsonar.sources=frontend,backend \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.javascript.lcov.reportPaths=combined-lcov.info
-      
+            -Dsonar.javascript.lcov.reportPaths=frontend-lcov.info,backend-lcov.info
+
+            
   # Gradnja Docker slike in nalaganje na Docker Hub - Production
   dockerize-and-push-prod:
     needs: [test-frontend]
@@ -198,49 +199,49 @@ jobs:
       name: Production
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: Build Docker image
-      run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:prod ./frontend
-        docker tag ${{ secrets.DOCKER_USERNAME }}/frontend:prod ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend:prod ./frontend
+          docker tag ${{ secrets.DOCKER_USERNAME }}/frontend:prod ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
 
-    - name: Push Docker image to Docker Hub
-      run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/frontend:prod
-        docker push ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/frontend:prod
+          docker push ${{ secrets.DOCKER_USERNAME }}/frontend:${{ github.sha }}
 
-  # Job za deploy na Firebase Hosting
+        # Job za deploy na Firebase Hosting
   deploy-to-firebase:
     needs: test-frontend 
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Download build artifact  
-      uses: actions/download-artifact@v4
-      with:
-        name: frontend-build  
-        path: frontend/out/ 
+      - name: Download build artifact  
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build  
+          path: frontend/out/ 
 
-    - name: Setup Firebase CLI  
-      run: |
-        cd frontend
-        npm install -g firebase-tools
+      - name: Setup Firebase CLI  
+        run: |
+          cd frontend
+          npm install -g firebase-tools
 
-    - name: Deploy to Firebase Hosting 
-      run: |
-        cd frontend
-        firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }}
+      - name: Deploy to Firebase Hosting 
+        run: |
+          cd frontend
+          firebase deploy --only hosting --token ${{ secrets.FIREBASE_TOKEN }}
 
   deploy-pages:
     needs: test-frontend
@@ -248,11 +249,11 @@ jobs:
     permissions:
       contents: write 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
