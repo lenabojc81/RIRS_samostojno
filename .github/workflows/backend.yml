@@ -173,7 +173,7 @@ jobs:
   
     - name: Deploy backend to Heroku
       run: |
-        CURRENT_BRANCH=$(echo ${GITHUB_REF##*/})
+        CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
         git checkout $CURRENT_BRANCH
         git subtree split --prefix backend -b deploy-branch
         git push -f heroku deploy-branch:main
