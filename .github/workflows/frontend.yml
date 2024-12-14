@@ -183,8 +183,8 @@ jobs:
           npx sonar-scanner \
             -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} \
             -Dsonar.organization=${{ secrets.ORGANIZATION_KEY }} \
-            -Dsonar.sources=frontend/src/app/components/transactions,backend/src \
-            -Dsonar.exclusions=coverage/**,node_modules/**,.next/** \
+            -Dsonar.sources=frontend/src/app/components/transactions/,backend/src/*.js \
+            -Dsonar.exclusions=coverage/**,node_modules/**,.next/**, **/*.test.{js,jsx,ts,tsx} \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.javascript.lcov.reportPaths=frontend-lcov.info,backend-lcov.info
 
