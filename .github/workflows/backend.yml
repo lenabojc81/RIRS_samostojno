@@ -152,7 +152,7 @@ jobs:
       - name: Collect coverage (React-specific)
         run: |
           backend
-          npm run test:ci -- --coverage
+          npm run test:ci
         env:
           CI: true
 
