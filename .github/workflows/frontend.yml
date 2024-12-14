@@ -128,7 +128,10 @@ jobs:
   # Job za SonarQube skeniranje
   sonarcloud-analysis:
     needs: test-frontend
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest 
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: Development   
 
     steps:
       - name: Checkout code
