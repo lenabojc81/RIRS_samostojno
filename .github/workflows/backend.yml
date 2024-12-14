@@ -5,8 +5,8 @@ name: Backend CI
 on:
   push:
     branches:
-      - main
-      - production
+      - main  
+      - production    
   pull_request:
     branches:
       - main
