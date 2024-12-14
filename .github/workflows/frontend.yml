@@ -100,9 +100,10 @@ jobs:
   dockerize-and-push-dev:
     needs: test-frontend
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' 
     environment: 
       name: Development
-    if: github.ref == 'refs/heads/main' 
+    
 
     steps:
     - name: Checkout code
@@ -127,10 +128,7 @@ jobs:
   # Job za SonarQube skeniranje
   sonarcloud-analysis:
     needs: test-frontend
-    runs-on: ubuntu-latest
-    environment: 
-      name: Development
-    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest    
 
     steps:
       - name: Checkout code
