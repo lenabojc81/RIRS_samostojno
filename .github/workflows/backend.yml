@@ -97,9 +97,10 @@ jobs:
   dockerize-and-push-dev:
     needs: test-backend  # Izvede se po uspešnem testiranju
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     environment: 
       name: Development
-    if: github.ref == 'refs/heads/main'
+    
 
     steps:
     - name: Checkout code
