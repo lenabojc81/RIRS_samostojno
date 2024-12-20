@@ -122,9 +122,76 @@ jobs:
         docker push ${{ secrets.DOCKER_USERNAME }}/backend:dev
         docker push ${{ secrets.DOCKER_USERNAME }}/backend:${{ github.sha }}
 
+  # Job za SonarQube skeniranje
+  sonarcloud-analysis:
+    needs: test-backend
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: Development
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+          cd ../backend
+          npm ci
+
+      - name: Run tests and collect coverage (Frontend)
+        run: |
+          cd frontend
+          npm run test:ci -- --coverage
+          cp coverage/lcov.info ../frontend-lcov.info
+        env:
+          CI: true
+
+      - name: Run tests and collect coverage (Backend)
+        run: |
+          cd backend
+          npm run test:ci
+          cp coverage/lcov.info ../backend-lcov.info
+        env:
+          CI: true
+
+      - name: Debug LCOV Files
+        run: |
+          echo "Frontend LCOV:"
+          cat frontend-lcov.info
+          echo "Backend LCOV:"
+          cat backend-lcov.info
+
+      - name: Run SonarCloud Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          npx sonar-scanner \
+            -Dsonar.projectKey=${{ secrets.PROJECT_KEY }} \
+            -Dsonar.organization=${{ secrets.ORGANIZATION_KEY }} \
+            -Dsonar.sources=frontend/src/app/components/transactions,backend/src \
+            -Dsonar.inclusions=frontend/src/app/components/transactions/category.tsx,frontend/src/app/components/transactions/newTransaction.tsx,frontend/src/app/components/transactions/transactionDetails.tsx,backend/src/category.js,backend/src/transactions.js \
+            -Dsonar.exclusions=coverage/**,node_modules/**,.next/**,**/*.test.{js,jsx,ts,tsx} \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.javascript.lcov.reportPaths=frontend-lcov.info,backend-lcov.info
+
+
   # Gradnja Docker slike in nalaganje na Docker Hub - Production
   dockerize-and-push-prod:
-    needs: test-backend  # Izvede se po uspešnem testiranju
+    needs: [test-backend, sonarcloud-analysis]  # Izvede se po uspešnem testiranju
     runs-on: ubuntu-latest
 
     if: github.ref == 'refs/heads/production' 
